@@ -34,6 +34,8 @@
         // Webhooks
 
         // Uploadable files
+        add_filter( 'dnd_cf7_auto_delete_files', 'dnd_set_auto_delete_files_seconds_interval' );
+        add_filter( 'wpcf7_upload_file_name', 'dnd_modify_uploaded_file_name' );
 
         // Updates
     }
@@ -131,6 +133,33 @@
         }
     }
 
+    /**
+     * Changes the storage time of files uploaded by users
+     */
+    public function set_dnd_auto_delete_files_seconds_interval( $seconds ) {
+        return MONTH_IN_SECONDS;
+    }
+
+    /**
+     * Changes the name of files uploaded by users for security purposes
+     */
+    public function dnd_modify_uploaded_file_name( $original_file_name ) {
+        $salt = bin2hex( random_bytes( 16 ) ); // Salt generation
+        $data = $original_file_name . time();
+        $hash_with_salt = hash( 'sha256', $data . $salt ); // Data concatenation and salt before hashing
+
+        // Splitting a file name into a filename and an extension
+        $file_name = pathinfo( $original_file_name, PATHINFO_FILENAME );
+        $extension = pathinfo( $original_file_name, PATHINFO_EXTENSION );
+
+        // Shorten the file name to 30 characters if it is too long
+        $file_name = ( strlen( $file_name ) > 30 ) ? substr( $file_name, 0, 30 ) : $file_name;
+
+        return time() . '_' . $hash_with_salt . '_' . $file_name . '.' . $extension;
+    }
+
+    
+    /* Auxiliary things */
     public function logit( $data, $description = '[INFO]' ) {
         $filename = WP_CONTENT_DIR . '/bs-cf7-temza-addon_log.log';
 
