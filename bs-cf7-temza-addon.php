@@ -47,8 +47,8 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
         add_action( 'wpcf7_mail_sent', array( $this, 'send_data_to_webhook' ) );
 
         // Uploadable files
-        add_filter( 'dnd_cf7_auto_delete_files', 'dnd_set_auto_delete_files_seconds_interval' );
-        add_filter( 'wpcf7_upload_file_name', 'dnd_modify_uploaded_file_name' );
+        add_filter( 'dnd_cf7_auto_delete_files', array( $this, 'dnd_set_auto_delete_files_seconds_interval' ) );
+        add_filter( 'wpcf7_upload_file_name', array( $this, 'dnd_modify_uploaded_file_name' ) );
 
         // Updates
     }
@@ -152,7 +152,8 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
         if ( empty( $webhook_url ) )
             return;
 
-        $webhook_url = $webhook_url[0];
+        // Remove quotes from url if they are present
+        $webhook_url = trim($webhook_url[0], "\"");
 
         $submission = WPCF7_Submission::get_instance();
         $posted_data = $submission->get_posted_data();
@@ -170,34 +171,27 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
             ARRAY_FILTER_USE_KEY
         ); 
 
-        $curl_session = curl_init( $webhook_url );
-        curl_setopt( $curl_session, CURLOPT_POST, true );
-        curl_setopt( $curl_session, CURLOPT_POSTFIELDS, http_build_query( $filtered_posted_data ) );
-        curl_setopt( $curl_session, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $curl_session, CURLOPT_PORT, 443 );
+        $response = wp_remote_post( $webhook_url, array(
+            'body'    => $filtered_posted_data,
+            'headers' => array( 'Content-Type' => 'application/x-www-form-urlencoded' ),
+            'method'  => 'POST'
+        ) );
 
-        $verbose = fopen('php://temp', 'w+');
-        curl_setopt($curl_session, CURLOPT_VERBOSE, true);
-        curl_setopt($curl_session, CURLOPT_STDERR, $verbose);
-        $response = curl_exec( $curl_session );
-        rewind($verbose);
-        $verboseLog = stream_get_contents($verbose);
+        if ( is_wp_error( $response ) )
+            $this->logit( $response, '[ERROR]: send_data_to_webhook | An error occurred when sending data to the webhook' );
         
         $this->logit( array( 
             'webhook_url' => $webhook_url,
             'posted_data' => $posted_data,
             'filtered_posted_data' => $filtered_posted_data,
             'response' => $response,
-            'verbose_log' => $verboseLog
         ), '[INFO]: send_data_to_webhook' );
-
-        curl_close( $curl_session );
     }
 
     /**
      * Changes the storage time of files uploaded by users
      */
-    public function set_dnd_auto_delete_files_seconds_interval( $seconds ) {
+    public function dnd_set_auto_delete_files_seconds_interval( $seconds ) {
         return MONTH_IN_SECONDS;
     }
 
