@@ -146,6 +146,28 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
         }
     }
 
+    private function get_human_readable_traffic_source( $traffic_source ) {
+        $labels = array(
+            'organic'       =>  'Organic',
+            'googleads'     =>  'Google Ads',
+            'facebook'      =>  'Facebook',
+            'facebookads'   =>  'Facebook Ads ',
+            'instagram'     =>  'Instagram',
+            'instagramads'  =>  'Instagram Ads',
+            'bing'          =>  'Bing',
+            'linkedin'      =>  'LinkedIn',
+            'referral'      =>  'Referral',
+            'repeat'        =>  'Repeat'
+        );
+    
+        if ( empty( $traffic_source ) )
+            return $labels['organic'];
+        else if ( key_exists( $traffic_source, $labels ) )
+            return $labels[$traffic_source];
+        else
+            return ucwords( $traffic_source );
+    }
+
     public function send_data_to_webhook( $contact_form ) {
         $webhook_url = $contact_form->additional_setting( 'webhook_url' );
         // Webhook is not set
@@ -170,6 +192,7 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
             },
             ARRAY_FILTER_USE_KEY
         ); 
+        $filtered_posted_data['bs_utm_source'] = $this->get_human_readable_traffic_source( $filtered_posted_data['bs_utm_source'] );
 
         $response = wp_remote_post( $webhook_url, array(
             'body'    => $filtered_posted_data,
@@ -179,13 +202,6 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
 
         if ( is_wp_error( $response ) )
             $this->logit( $response, '[ERROR]: send_data_to_webhook | An error occurred when sending data to the webhook' );
-        
-        $this->logit( array( 
-            'webhook_url' => $webhook_url,
-            'posted_data' => $posted_data,
-            'filtered_posted_data' => $filtered_posted_data,
-            'response' => $response,
-        ), '[INFO]: send_data_to_webhook' );
     }
 
     /**
