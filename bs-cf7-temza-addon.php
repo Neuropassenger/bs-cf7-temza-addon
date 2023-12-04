@@ -3,7 +3,7 @@
  * Plugin Name:       Temza addon for Contact Form 7
  * Plugin URI:        https://github.com/Neuropassenger/bs-cf7-temza-addon
  * Description:       Implements adding UTM tags to form data, adds the ability to send data via webhook, and improves security for uploaded files.
- * Version:           1.0.2
+ * Version:           1.1.0
  * Requires at least: 6.3.2
  * Requires PHP:      7.4.33
  * Author:            Oleg Sokolov
@@ -54,6 +54,10 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
 
         // Updates
         add_action( 'plugins_loaded', array( $this, 'check_plugin_updates' ) );
+
+        // Plugin Settings
+        add_action( 'admin_menu', 'register_plugin_settings_page' );
+        add_action( 'admin_init', 'plugin_settings_init' );
     }
 
     public function enqueue_utm_handler() {
@@ -246,6 +250,62 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
 
         // Optional: If you're using a private repository, specify the access token like this:
         $update_checker->setAuthentication('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');
+    }
+
+    public function register_plugin_settings_page() {
+        add_options_page(
+            'Temza addon for Contact Form 7 - Settings',
+            'Temza addon for CF7',
+            'manage_options',
+            'bs-cf7-temza-addon-settings',
+            'render_plugin_settings_page'
+        );
+    }
+
+    public function render_plugin_settings_page() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+        ?>
+        <div class="wrap">
+            <h1><?= esc_html( get_admin_page_title() ); ?></h1>
+            <form action="options.php" method="post">
+                <?php
+                settings_fields( 'bs-cf7-settings' );
+                do_settings_sections( 'bs-cf7-settings' );
+                submit_button();
+                ?>
+            </form>
+        </div>
+        <?php
+    }
+
+    public function plugin_settings_init() {
+        register_setting('bs-cf7-settings', 'bs_cf7_temza_addon_update_token');
+
+        add_settings_section(
+            'bs-cf7-settings',
+            'Updates',
+            array( $this, 'bs_cf7_settings_section_cb' ),
+            'bs-cf7-settings'
+        );
+
+        add_settings_field(
+            'bs_cf7_temza_addon_update_token',
+            'GitHub token',
+            array( $this, 'bs_cf7_temza_addon_update_token_cb' ),
+            'bs-cf7-settings',
+            'bs_cf7_settings_section'
+        );
+    }
+
+    public function bs_cf7_settings_section_cb() {
+        echo '<p>Enter your GitHub token for plugin updates.</p>';
+    }
+    
+    public function bs_cf7_temza_addon_update_token_cb() {
+        $token = get_option('bs_cf7_temza_addon_update_token_cb');
+        echo '<input type="text" name="bs_cf7_temza_addon_update_token_cb" value="' . esc_attr( $token ) . '">';
     }
     
     /* Auxiliary things */
