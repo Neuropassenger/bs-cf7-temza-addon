@@ -17,20 +17,21 @@ Temza addon for Contact Form 7 is a plugin that extends the functionality of Con
 
 The plugin implements several features:
 
-1. Collects and saves the transmitted utm-data in COOKIE to be used when submitting Contact Form 7 forms. 
+Collects and saves the transmitted utm-data in COOKIE to be used when submitting Contact Form 7 forms. 
 The following tags are currently supported:
 * utm_source
 * utm_medium
 * utm_term
 * utm_content,
 * utm_campaign
+
 In addition to the tags passed, the plugin will store the address of the page that was the first page the user visited. If it is possible to determine the source of transition, it will be done.
 
-2. Improves file upload security in Contact Form 7 with the use of Drag and Drop Multiple File Upload - Contact Form 7 plugin.
+Improves file upload security in Contact Form 7 with the use of Drag and Drop Multiple File Upload - Contact Form 7 plugin.
 * Changes the names of uploaded files so they cannot be matched
 * Changes the file retention time to 1 month
 
-3. Adds the ability to submit form data when the form is submitted via webhook. 
+Adds the ability to submit form data when the form is submitted via webhook. 
 To do this, you need to specify <code>webhook_url</code> in Additional Settings for the form. For example, <code>webhook_url: "https://webhook.site/19bc49b3-4982-45d3-8fe7-84860e4c0c10"</code>. 
 If everything is correct, the plugin will send all form fields to webhook and add utm-data to them. The names for the form fields remain the same, but the <code>bs_</code> prefix is added to the utm tag names. For example, if utm_source utm tag is sent, it will look like bs_utm_source.
 In addition, the plugin tries to replace the data from utm_source with human-readable names when submitting via webhhook. Here's a list of matches:
