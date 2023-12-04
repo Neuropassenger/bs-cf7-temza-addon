@@ -56,8 +56,8 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
         add_action( 'plugins_loaded', array( $this, 'check_plugin_updates' ) );
 
         // Plugin Settings
-        add_action( 'admin_menu', 'register_plugin_settings_page' );
-        add_action( 'admin_init', 'plugin_settings_init' );
+        add_action( 'admin_menu', array( $this, 'register_plugin_settings_page' ) );
+        add_action( 'admin_init', array( $this, 'plugin_settings_init' ) );
     }
 
     public function enqueue_utm_handler() {
@@ -237,6 +237,10 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
     }
 
     public function check_plugin_updates() {
+        $update_token = get_option( 'bs_cf7_temza_addon_update_token' );
+        if ( ! $update_token )
+            return;
+
         require 'plugin-update-checker/plugin-update-checker.php';
         
         $update_checker = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
@@ -246,10 +250,10 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
         );
 
         // Set the branch that contains the stable release.
-        $update_checker->setBranch('main');
+        $update_checker->setBranch( 'main' );
 
         // Optional: If you're using a private repository, specify the access token like this:
-        $update_checker->setAuthentication('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');
+        $update_checker->setAuthentication( $update_token );
     }
 
     public function register_plugin_settings_page() {
@@ -258,7 +262,7 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
             'Temza addon for CF7',
             'manage_options',
             'bs-cf7-temza-addon-settings',
-            'render_plugin_settings_page'
+            array( $this, 'render_plugin_settings_page' )
         );
     }
 
@@ -284,7 +288,7 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
         register_setting('bs-cf7-settings', 'bs_cf7_temza_addon_update_token');
 
         add_settings_section(
-            'bs-cf7-settings',
+            'bs-cf7-settings-section',
             'Updates',
             array( $this, 'bs_cf7_settings_section_cb' ),
             'bs-cf7-settings'
@@ -295,7 +299,7 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
             'GitHub token',
             array( $this, 'bs_cf7_temza_addon_update_token_cb' ),
             'bs-cf7-settings',
-            'bs_cf7_settings_section'
+            'bs-cf7-settings-section'
         );
     }
 
@@ -304,8 +308,8 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
     }
     
     public function bs_cf7_temza_addon_update_token_cb() {
-        $token = get_option('bs_cf7_temza_addon_update_token_cb');
-        echo '<input type="text" name="bs_cf7_temza_addon_update_token_cb" value="' . esc_attr( $token ) . '">';
+        $token = get_option( 'bs_cf7_temza_addon_update_token', "" );
+        echo '<input style="width: 355px;" type="text" name="bs_cf7_temza_addon_update_token" value="' . esc_attr( $token ) . '">';
     }
     
     /* Auxiliary things */
