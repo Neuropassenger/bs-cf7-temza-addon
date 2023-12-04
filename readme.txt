@@ -4,7 +4,7 @@ Donate link: https://neuropasssenger.ru
 Tags: Contact Form 7, UTM Tracking, webhook, cf7, Contact, dnd
 Requires at least: 6.3.2
 Tested up to: 6.3.2
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 Requires PHP: 7.4.33
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
