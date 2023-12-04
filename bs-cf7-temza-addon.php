@@ -3,7 +3,7 @@
  * Plugin Name:       Temza addon for Contact Form 7
  * Plugin URI:        https://github.com/Neuropassenger/bs-cf7-temza-addon
  * Description:       Implements adding UTM tags to form data, adds the ability to send data via webhook, and improves security for uploaded files.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Requires at least: 6.3.2
  * Requires PHP:      7.4.33
  * Author:            Oleg Sokolov
