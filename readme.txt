@@ -36,7 +36,7 @@ Improves file upload security in Contact Form 7 with the use of Drag and Drop Mu
 # Sending data via webhook
 Adds the ability to submit form data when the form is submitted via webhook. 
 To do this, you need to specify <code>webhook_url</code> in Additional Settings for the form. For example, <code>webhook_url: "https://webhook.site/19bc49b3-4982-45d3-8fe7-84860e4c0c10"</code>. 
-If everything is correct, the plugin will send all form fields to webhook and add utm-data to them. The names for the form fields remain the same, but the <code>bs_</code> prefix is added to the utm tag names. For example, if utm_source utm tag is sent, it will look like bs_utm_source.
+If everything is correct, the plugin will send all form fields to webhook and add utm data to them. The names for the form fields remain the same, but the <code>bs_</code> prefix is added to the utm tag names. For example, if utm_source utm tag is sent, it will look like bs_utm_source.
 In addition, the plugin tries to replace the data from utm_source with human-readable names when submitting via webhhook. Here's a list of matches:
 * organic to Organic
 * googleads to Google Ads
