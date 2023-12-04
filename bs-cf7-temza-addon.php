@@ -21,17 +21,19 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
  class Bs_Cf7_Temza_Addon {
     public $plugin_slug;
     public $version;
+    public $slug;
 
     private $available_utm_tags;
 
     public function __construct() {
         $this->plugin_slug = plugin_basename( __DIR__ );
         $this->version = '1.0.0';
+        $this->slug = 'bs-cf7-temza-addon';
 
         $this->available_utm_tags = array( 
             'bs_utm_source', 
             'bs_utm_medium', 
-            'bs_utm_term', 
+            'bs_utm_term',
             'bs_utm_content', 
             'bs_utm_campaign', 
             'bs_landing_page', 
@@ -51,6 +53,7 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
         add_filter( 'wpcf7_upload_file_name', array( $this, 'dnd_modify_uploaded_file_name' ) );
 
         // Updates
+        add_action( 'plugins_loaded', array( $this, 'check_plugin_updates' ) );
     }
 
     public function enqueue_utm_handler() {
@@ -229,6 +232,21 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
         return time() . '_' . $hash_with_salt . '_' . $file_name . '.' . $extension;
     }
 
+    public function check_plugin_updates() {
+        require 'plugin-update-checker/plugin-update-checker.php';
+        
+        $update_checker = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+            'https://github.com/Neuropassenger/bs-cf7-temza-addon',
+            __FILE__,
+            $this->slug
+        );
+
+        // Set the branch that contains the stable release.
+        $update_checker->setBranch('main');
+
+        // Optional: If you're using a private repository, specify the access token like this:
+        $update_checker->setAuthentication('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');
+    }
     
     /* Auxiliary things */
     public function logit( $data, $description = '[INFO]' ) {
