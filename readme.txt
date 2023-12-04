@@ -18,7 +18,7 @@ Temza addon for Contact Form 7 is a plugin that extends the functionality of Con
 The plugin implements several features:
 
 # UTM Tags
-Collects and saves the transmitted utm-data in COOKIE to be used when submitting Contact Form 7 forms. 
+Collects and saves the transmitted utm-data in COOKIE to be used when submitting Contact Form 7 forms. Tags will only be processed if the utm_source tag is present.
 The following tags are currently supported:
 * utm_source
 * utm_medium
