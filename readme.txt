@@ -48,13 +48,13 @@ In addition, the plugin tries to replace the data from utm_source with human-rea
 
 == Changelog ==
 
-= 1.2.1
+= 1.2.1 =
 * Added verification of Drag and Drop Multiple File Upload - Contact Form 7 plugin usage.
 
-= 1.2.0
+= 1.2.0 =
 * Not using tokens for updates. 
 
-= 1.1.0
+= 1.1.0 =
 * Added the ability to enter the Github token required to update the plugin.
 
 = 1.0.0 =
