@@ -3,7 +3,7 @@
  * Plugin Name:       Temza addon for Contact Form 7
  * Plugin URI:        https://github.com/Neuropassenger/bs-cf7-temza-addon
  * Description:       Implements adding UTM tags to form data, adds the ability to send data via webhook, and improves security for uploaded files.
- * Version:           1.2.0
+ * Version:           1.2.1
  * Requires at least: 6.3.2
  * Requires PHP:      7.4.33
  * Author:            Oleg Sokolov
@@ -27,7 +27,7 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
 
     public function __construct() {
         $this->plugin_slug = plugin_basename( __DIR__ );
-        $this->version = '1.2.0';
+        $this->version = '1.2.1';
         $this->slug = 'bs-cf7-temza-addon';
 
         $this->available_utm_tags = array( 
@@ -49,8 +49,10 @@ if ( ! is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) )
         add_action( 'wpcf7_mail_sent', array( $this, 'send_data_to_webhook' ) );
 
         // Uploadable files
-        add_filter( 'dnd_cf7_auto_delete_files', array( $this, 'dnd_set_auto_delete_files_seconds_interval' ) );
-        add_filter( 'wpcf7_upload_file_name', array( $this, 'dnd_modify_uploaded_file_name' ) );
+        if ( is_plugin_active( 'drag-and-drop-multiple-file-upload-contact-form-7/drag-n-drop-upload-cf7.php' ) ) {
+            add_filter( 'dnd_cf7_auto_delete_files', array( $this, 'dnd_set_auto_delete_files_seconds_interval' ) );
+            add_filter( 'wpcf7_upload_file_name', array( $this, 'dnd_modify_uploaded_file_name' ) );
+        }
 
         // Updates
         add_action( 'plugins_loaded', array( $this, 'check_plugin_updates' ) );

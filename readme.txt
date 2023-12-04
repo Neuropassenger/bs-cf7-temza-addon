@@ -4,7 +4,7 @@ Donate link: https://neuropasssenger.ru
 Tags: Contact Form 7, UTM Tracking, webhook, cf7, Contact, dnd
 Requires at least: 6.3.2
 Tested up to: 6.3.2
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 Requires PHP: 7.4.33
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -47,6 +47,9 @@ In addition, the plugin tries to replace the data from utm_source with human-rea
 * repeat to Repeat
 
 == Changelog ==
+
+= 1.2.1
+* Added verification of Drag and Drop Multiple File Upload - Contact Form 7 plugin usage.
 
 = 1.2.0
 * Not using tokens for updates. 
