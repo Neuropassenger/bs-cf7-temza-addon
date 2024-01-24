@@ -4,7 +4,7 @@ Donate link: https://neuropasssenger.ru
 Tags: Contact Form 7, UTM Tracking, webhook, cf7, Contact, dnd
 Requires at least: 6.3.2
 Tested up to: 6.3.2
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 Requires PHP: 7.4.33
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -36,8 +36,8 @@ Improves file upload security in Contact Form 7 with the use of Drag and Drop Mu
 # Sending data via webhook
 Adds the ability to submit form data when the form is submitted via webhook. 
 To do this, you need to specify <code>webhook_url</code> in Additional Settings for the form. For example, <code>webhook_url: "https://webhook.site/19bc49b3-4982-45d3-8fe7-84860e4c0c10"</code>. 
-If everything is correct, the plugin will send all form fields to webhook and add utm data to them. The names for the form fields remain the same, but the <code>bs_</code> prefix is added to the utm tag names. For example, if utm_source utm tag is sent, it will look like bs_utm_source.
-In addition, the plugin tries to replace the data from utm_source with human-readable names when submitting via webhhook. Here's a list of matches:
+If everything is correct, the plugin will send all form fields to webhook and add utm data to them. The names for the form fields remain the same, but the <code>bs_</code> prefix is added to the utm tag names. For example, if utm_term utm tag is sent, it will look like bs_utm_term.
+In addition, the plugin tries to replace the data from utm_source with human-readable names when submitting via webhhook and sent as bs_source. Here's a list of matches:
 * organic to Organic
 * googleads to Google Ads
 * facebook to Facebook
@@ -50,6 +50,9 @@ In addition, the plugin tries to replace the data from utm_source with human-rea
 * repeat to Repeat
 
 == Changelog ==
+
+= 1.2.3 =
+* bs_utm_source is now sent as bs_source.
 
 = 1.2.1 =
 * Added verification of Drag and Drop Multiple File Upload - Contact Form 7 plugin usage.
